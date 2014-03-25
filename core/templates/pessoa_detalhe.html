@@ -6,9 +6,11 @@
 <body>
     <h1>Cadastro de Pessoa<h1>
 
-    <form>
+    <form method="POST" action="{% url 'pessoa_save' pk %}">
         {% csrf_token %}
+        {{form.as_p}}
         <input type='submit' value='Salvar'>
+        <a href="{% url 'home' %}">Cancelar</a>
     </form>
 </body>
 </html>

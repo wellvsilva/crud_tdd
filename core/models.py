@@ -1,3 +1,8 @@
 from django.db import models
 
-# Create your models here.
+class Pessoa(models.Model):
+    nome = models.CharField(max_length=100)
+    cpf = models.CharField(max_length=200)
+
+    def __unicode__(self):
+        return self.nome
