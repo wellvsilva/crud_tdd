@@ -9,6 +9,7 @@ urlpatterns = patterns('',
 
     # urls pessoa
     url(r'^pessoa/add/$', 'core.views.pessoa_add', name='pessoa_add'),
+    url(r'^pessoa/list$', 'core.views.pessoa_list', name='pessoa_list'),
     url(r'^pessoa/save/(?P<pk>\d+)/$', 'core.views.pessoa_save', name='pessoa_save'),
     url(r'^pessoa/delete/(?P<pk>\d+)/$', 'core.views.pessoa_delete', name='pessoa_delete'),
 

@@ -8,6 +8,10 @@ from core.models import Pessoa
 def home(request):
     return render(request, 'index.html', {'message': 'Testando Django com TDD',})
 
+def pessoa_list(request):
+    context = dict(lista=Pessoa.objects.all(),)
+    return render(request, 'pessoa.html', context)
+
 def pessoa_add(request):
     context = {'form': PessoaForm(), 'pk': 0}
     return render(request, 'pessoa_detalhe.html', context)

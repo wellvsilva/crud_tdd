@@ -9,14 +9,10 @@ class ViewHomeTest(TestCase):
 
     # Crio uma instancia do objeto response pra ser compartilhado por todos os testes
     def setUp(self):
-        #self.browser = webdriver.Firefox()
         self.client = Client()
         self.response = self.client.get(reverse('home'), {})
-        #self.browser.implicitly_wait(3)
-        #self.response = self.browser.get(reverse('home'))
 
     def tearDown(self):
-        #self.browser.quit()
         pass
 
     # testar o status_code da requisição    
@@ -31,14 +27,18 @@ class ViewHomeTest(TestCase):
 
     # testar principais tags HTML
     def test_principals_tags_html(self):
-        self.assertIn('<h1>', self.response.content)
-        self.assertIn('<h3>', self.response.content)
+        'deve conter as principais tags HTML: <h1>, <form>'
+        self.assertIn('<h1>', self.response.content, 'html deve ter a tag <h1>')
+        self.assertIn('<h3>', self.response.content, 'html deve ter a tag <h3>')
+        self.assertContains(response=self.response, text='<a', count=1, msg_prefix='deve contexr 1 tag de link <a')
 
     # testar os dados no HTML
     def test_deve_conter_dados_no_contexto(self):
         'Deve conter dados no contexto'
         self.assertIn('Django TDD', self.response.content)
         self.assertIn('Testando Django com TDD', self.response.content)
+        self.assertIn('Pessoas', self.response.content)
+        self.assertContains(self.response, 'href="%s"' % reverse('pessoa_list'), 1)
         
     # testar as variaveis no contexto
     def test_deve_variaveis_no_contexto(self):

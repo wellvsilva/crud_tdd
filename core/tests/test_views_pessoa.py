@@ -1,4 +1,5 @@
 # coding: utf-8
+from django.db.models.query import QuerySet
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 from core.forms import PessoaForm
@@ -36,7 +37,7 @@ class ViewPessoaAddTest(TestCase):
         self.assertContains(self.resp, '<input id="id_cpf"', 1)
         self.assertContains(self.resp, "<input type='submit'", 1)
         self.assertContains(self.resp, ">Cancelar</a>", 1)
-        self.assertContains(self.resp, 'href="%s"' % reverse('home'), 1)
+        self.assertContains(self.resp, 'href="%s"' % reverse('pessoa_list'), 1)
         self.assertTrue(self.resp.content.endswith(b'</html>'))
 
     def test_html_deve_conter_dados(self):
@@ -91,6 +92,39 @@ class ViewPessoaSaveTest(TestCase):
         self.assertEqual(resp.status_code, 302, 'Deve ter retornado status_code 302 se atualizou com sucesso')
         np = Pessoa.objects.get(cpf='123456')
         self.assertIsNotNone(np, 'Deve ter retornado um objeto Pessoa')
+
+
+class ViewPessoaListTest(TestCase):
+    def setUp(self):
+        self.resp = self.client.get(reverse('pessoa_list'))
+
+    def test_url_deve_retornar_status_code_200(self):
+        'o request deve retornar status_code 200'
+        self.assertEqual(self.resp.status_code, 200)
+
+    def test_deve_estar_usando_template_pessoa(self):
+        'a view pessoa_list deve renderizar o template pessoa.html'
+        self.assertTemplateUsed(self.resp, 'pessoa.html')
+
+    def test_contexto_deve_ter_variavel_lista_pessoa(self):
+        self.assertTrue('lista' in self.resp.context, 'deve ter no contexto uma variavel lista de pessoas')
+
+    def test_variavel_lista_deve_ser_um_queryset(self):
+        'a variavel lista deve ser do tipo QuerySet'
+        lista = self.resp.context['lista']
+        self.assertIsInstance(lista, QuerySet)
+
+    def  test_deve_conter_principais_tags_html(self):
+        'deve conter as principais tags HTML: <h1>, <form>'
+        self.assertTrue(self.resp.content.startswith('<!DOCTYPE html>'))
+        self.assertIn('<h1>', self.resp.content)
+        self.assertIn('<table', self.resp.content)
+        self.assertContains(self.resp, 'href="%s"' % reverse('pessoa_add'), 1)
+        self.assertTrue(self.resp.content.endswith(b'</html>'))
+
+    def test_html_deve_conter_dados(self):
+        self.assertIn('Lista de Pessoas', self.resp.content, 'html deve conter o titulo Lista de Pessoas')
+        self.assertIn('Cadastrar nova Pessoa', self.resp.content, 'html deve conter o texto Cadastrar nova Pessoa')
 
 
 class ViewPessoaDeleteTest(TestCase):

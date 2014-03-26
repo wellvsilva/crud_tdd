@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <h1>Lista de Pessoas</h1>
+
+    <a href="{% url 'pessoa_add' %}">Cadastrar nova Pessoa</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th><th>Nome</th><th>CPF</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in lista %}
+            <tr>
+                <td>{{ item.id }}</td><td>{{ item.nome }}</td><td>{{ item.cpf }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
